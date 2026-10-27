@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI with DMS</title>
+<meta name="author" content="D Meenakshi Sundaram">
+<meta name="description" content="Learn AI step by step: What is AI, What is an LLM, Generative AI, and AI one circle at a time. By D Meenakshi Sundaram, AI Adoption & Developer Productivity Consultant, UAE.">
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid #334155;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 1.05rem; font-weight: 600; white-space: nowrap; }
+  nav { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
+  nav button {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid transparent;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  nav button:hover { color: var(--text); background: #334155; }
+  nav button.active { color: var(--bg); background: var(--accent); font-weight: 600; }
+  .tools { display: flex; gap: 8px; }
+  .tools a, .tools button {
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid #475569;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .tools a:hover, .tools button:hover { color: var(--text); border-color: var(--accent); }
+  main { flex: 1; position: relative; min-height: 0; }
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #fff;
+    display: none;
+  }
+  iframe.active { display: block; }
+
+  footer {
+    background: var(--panel);
+    border-top: 1px solid #334155;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  footer strong { color: var(--text); font-weight: 600; }
+  footer .links { display: flex; gap: 14px; align-items: center; }
+  footer a, footer button.linklike {
+    color: var(--accent);
+    background: none;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  footer a:hover, footer button.linklike:hover { text-decoration: underline; }
+
+  /* Disclaimer modal */
+  #modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,6,23,.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 10;
+  }
+  #modal.open { display: flex; }
+  .box {
+    background: var(--panel);
+    border: 1px solid #475569;
+    border-radius: 12px;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px;
+    line-height: 1.55;
+    font-size: 0.9rem;
+  }
+  .box h2 { font-size: 1.1rem; margin-bottom: 12px; }
+  .box h3 { font-size: 0.9rem; margin: 14px 0 4px; color: var(--accent); }
+  .box button {
+    margin-top: 18px;
+    background: var(--accent);
+    color: var(--bg);
+    border: 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @media (max-width: 640px) {
+    header h1 { width: 100%; }
+    nav button { padding: 7px 10px; font-size: 0.8rem; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI with DMS</h1>
+  <nav id="tabs"></nav>
+  <div class="tools">
+    <button id="prev" title="Previous (←)">←</button>
+    <button id="next" title="Next (→)">→</button>
+    <a id="open" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
+    <button id="full">Fullscreen</button>
+  </div>
+</header>
+
+<main id="stage"></main>
+
+<footer>
+  <div>
+    © <span id="year">2026</span> <strong>D Meenakshi Sundaram</strong> · AI Adoption &amp; Developer Productivity Consultant, UAE · All rights reserved.
+  </div>
+  <div class="links">
+    <a href="https://www.linkedin.com/in/dmsmtech" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <button class="linklike" id="disc-btn">Disclaimer</button>
+  </div>
+</footer>
+
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="disc-title">
+  <div class="box">
+    <h2 id="disc-title">Disclaimer &amp; Copyright</h2>
+
+    <h3>Educational purpose</h3>
+    <p>The content presented here is provided for general educational and informational purposes only. It does not constitute professional, legal, financial, technical or other advice, and should not be relied on as such.</p>
+
+    <h3>Accuracy</h3>
+    <p>AI is a fast-moving field. While care is taken to keep the material clear and useful, no guarantee is made that it is complete, current or error-free. Please verify important information independently before acting on it.</p>
+
+    <h3>Personal views</h3>
+    <p>Views and opinions expressed are those of the author in a personal capacity and do not represent those of any employer, client or organisation.</p>
+
+    <h3>Third-party names and content</h3>
+    <p>Product names, company names, logos and trademarks mentioned belong to their respective owners and are used for identification and educational reference only. No affiliation with or endorsement by those owners is implied. External links are provided for convenience, and the author is not responsible for the content of third-party sites.</p>
+
+    <h3>Copyright</h3>
+    <p>© <span id="year2">2026</span> D Meenakshi Sundaram. All rights reserved. No part of this content may be copied, reproduced, redistributed or republished without prior written permission, except for brief quotations with clear attribution to the author.</p>
+
+    <h3>Contact</h3>
+    <p>D Meenakshi Sundaram, AI Adoption &amp; Developer Productivity Consultant, UAE.<br>
+    <a href="https://www.linkedin.com/in/dmsmtech" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">linkedin.com/in/dmsmtech</a></p>
+
+    <button id="disc-close">Close</button>
+  </div>
+</div>
+
+<script>
+  const sites = [
+    { title: "1. What is AI?",              url: "https://aiwithdms.github.io/What-is-AI" },
+    { title: "2. What is an LLM?",          url: "https://aiwithdms.github.io/What-is-LLM" },
+    { title: "3. Generative AI",            url: "https://aiwithdms.github.io/Generative-AI-From-Ideas-to-Creation" },
+    { title: "4. AI, One Circle at a Time", url: "https://aiwithdms.github.io/AI-one-circle-at-a-time" }
+  ];
+
+  const tabs = document.getElementById("tabs");
+  const stage = document.getElementById("stage");
+  const openLink = document.getElementById("open");
+  let current = 0;
+
+  sites.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.textContent = s.title;
+    b.onclick = () => show(i);
+    tabs.appendChild(b);
+
+    const f = document.createElement("iframe");
+    f.title = s.title;
+    f.dataset.src = s.url;
+    f.allow = "fullscreen";
+    stage.appendChild(f);
+  });
+
+  function show(i) {
+    current = (i + sites.length) % sites.length;
+    [...tabs.children].forEach((b, k) => b.classList.toggle("active", k === current));
+    [...stage.children].forEach((f, k) => {
+      f.classList.toggle("active", k === current);
+      if (k === current && !f.src) f.src = f.dataset.src;
+    });
+    openLink.href = sites[current].url;
+    history.replaceState(null, "", "#" + (current + 1));
+  }
+
+  document.getElementById("prev").onclick = () => show(current - 1);
+  document.getElementById("next").onclick = () => show(current + 1);
+  document.getElementById("full").onclick = () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  };
+
+  const modal = document.getElementById("modal");
+  document.getElementById("disc-btn").onclick = () => modal.classList.add("open");
+  document.getElementById("disc-close").onclick = () => modal.classList.remove("open");
+  modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("open"); });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") modal.classList.remove("open");
+    if (modal.classList.contains("open")) return;
+    if (e.key === "ArrowRight") show(current + 1);
+    if (e.key === "ArrowLeft") show(current - 1);
+  });
+
+  const y = new Date().getFullYear();
+  document.getElementById("year").textContent = y;
+  document.getElementById("year2").textContent = y;
+
+  const start = parseInt(location.hash.slice(1), 10);
+  show(start >= 1 && start <= sites.length ? start - 1 : 0);
+</script>
+</body>
+</html>
